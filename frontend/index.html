@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Система интерактивных опросов</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <header class="header">
+      <div class="container">
+        <h1><i class="fas fa-poll"></i> LivePoll</h1>
+        <nav class="nav">
+          <span id="userInfo" class="user-info hidden"></span>
+
+          <button id="userProfileBtn" class="nav-btn hidden" onclick="location.href='viewer.html'">
+            <i class="fas fa-user"></i> Профиль
+          </button>
+
+          <button id="adminPanelBtn" class="nav-btn hidden" onclick="location.href='admin.html'">
+            <i class="fas fa-tachometer-alt"></i> Панель
+          </button>
+
+          <button class="nav-btn" onclick="window.open('help.html', '_blank')">
+            <i class="fas fa-question-circle"></i> Справка
+          </button>
+
+          <button id="adminLoginBtn" class="nav-btn" onclick="location.href='admin-login.html'">
+            <i class="fas fa-user-shield"></i> Вход админа
+          </button>
+
+          <button id="userLoginBtn" class="nav-btn" onclick="location.href='login.html'">
+            <i class="fas fa-user"></i> Вход
+          </button>
+
+          <button id="userRegisterBtn" class="nav-btn" onclick="location.href='register.html'">
+            <i class="fas fa-user-plus"></i> Регистрация
+          </button>
+
+          <button id="logoutBtn" class="nav-btn hidden" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Выйти
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="container">
+        <div class="stream-container">
+          <div class="stream-header">
+            <h2><i class="fas fa-video"></i> Прямой эфир</h2>
+            <div class="stream-stats">
+              <span id="viewerCount">0 зрителей</span>
+              <span id="pollStatus">Опросов нет</span>
+            </div>
+          </div>
+          <div class="stream-video">
+            <iframe width="720" height="405"
+              src="https://rutube.ru/play/embed/546602986e6a424d74d594876ddb3f04/?skinColor=0e8dee"
+              style="border: none" allow="clipboard-write; autoplay" allowfullscreen>
+            </iframe>
+          </div>
+        </div>
+
+        <div id="pollSidebar" class="poll-sidebar">
+          <div id="sidebarContent">
+            <div class="welcome-message">
+              <h3><i class="fas fa-bullhorn"></i> Система опросов</h3>
+              <p>Войдите в систему для участия</p>
+            </div>
+          </div>
+          <button id="toggleChartBtn" class="nav-btn hidden"
+            style="width: 100%; margin-top: 15px; background: #6c757d">
+            <i class="fas fa-chart-bar"></i> Показать результаты
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p><i class="fas fa-copyright"></i> 2026 Мареич Владислав ИС-41.</p>
+        <p>Система интерактивных опросов для прямых эфиров в реальном времени</p>
+      </div>
+    </footer>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="script.js"></script>
+    <audio id="voteAudio" preload="auto" style="display: none">
+      <source src="assets/vote-sound.mp3" type="audio/mpeg" />
+    </audio>
+    <div id="soundWarning" style="position: fixed; bottom: 10px; right: 10px; background: #333; color: #fff; padding: 8px 12px; border-radius: 8px; font-size: 12px; z-index: 9999; display: none;">
+      Нажмите, чтобы включить звук
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        checkSavedSession();
+        if (currentUser) {
+          showUserInterface();
+          const sidebar = document.getElementById('sidebarContent');
+          if (sidebar) {
+            sidebar.innerHTML = `
+              <div class="welcome-message">
+                <h3><i class="fas fa-poll"></i> Активные опросы</h3>
+                <div id="activePollsList"></div>
+              </div>`;
+          }
+        }
+        initWebSocket();
+        initAudio();
+        loadActivePolls();
+      });
+    </script>
+  </body>
+</html>

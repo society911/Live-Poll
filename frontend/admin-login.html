@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Вход администратора — LivePoll</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+      .auth-card { border-color: rgba(247, 37, 133, 0.2); }
+      .auth-card::before {
+        background: radial-gradient(circle at 30% 20%, rgba(247, 37, 133, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 70% 80%, rgba(67, 97, 238, 0.06) 0%, transparent 50%);
+      }
+      .auth-icon {
+        background: linear-gradient(135deg, var(--accent), #e11570);
+        box-shadow: 0 8px 25px rgba(247, 37, 133, 0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="container">
+        <h1 onclick="location.href='index.html'" style="cursor:pointer"><i class="fas fa-poll"></i> LivePoll</h1>
+        <nav class="nav">
+          <button class="nav-btn" onclick="location.href='index.html'">
+            <i class="fas fa-home"></i> На главную
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="auth-page">
+      <div class="auth-card">
+        <div class="auth-icon"><i class="fas fa-user-shield"></i></div>
+        <h2>Вход администратора</h2>
+
+        <div class="auth-error" id="authError">
+          <i class="fas fa-exclamation-circle"></i>
+          <span id="errorText"></span>
+        </div>
+
+        <div class="input-group">
+          <i class="fas fa-user input-icon"></i>
+          <input type="text" id="adminUsername" placeholder="Логин" value="admin" />
+        </div>
+
+        <div class="input-group">
+          <i class="fas fa-lock input-icon"></i>
+          <input type="password" id="adminPassword" placeholder="Пароль" />
+          <button class="password-toggle" type="button" onclick="togglePassword('adminPassword', this)">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+
+        <button id="adminLoginSubmit" class="auth-submit" style="background: linear-gradient(135deg, var(--accent), #e11570);">
+          <span class="spinner"></span>
+          <span class="btn-text"><i class="fas fa-shield-alt"></i> Войти</span>
+        </button>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p><i class="fas fa-copyright"></i> 2026 Мареич Владислав ИС-41.</p>
+      </div>
+    </footer>
+
+    <script>
+      const API_BASE_URL = 'http://localhost:3000/api';
+
+      function togglePassword(inputId, btn) {
+        const input = document.getElementById(inputId);
+        const icon = btn.querySelector('i');
+        if (input.type === 'password') {
+          input.type = 'text';
+          icon.className = 'fas fa-eye-slash';
+        } else {
+          input.type = 'password';
+          icon.className = 'fas fa-eye';
+        }
+      }
+
+      function showError(msg) {
+        const el = document.getElementById('authError');
+        document.getElementById('errorText').textContent = msg;
+        el.classList.add('show');
+      }
+
+      function hideError() {
+        document.getElementById('authError').classList.remove('show');
+      }
+
+      function setLoading(loading) {
+        const btn = document.getElementById('adminLoginSubmit');
+        if (loading) {
+          btn.classList.add('loading');
+          btn.disabled = true;
+        } else {
+          btn.classList.remove('loading');
+          btn.disabled = false;
+        }
+      }
+
+      document.getElementById('adminLoginSubmit').addEventListener('click', async function() {
+        hideError();
+        const username = document.getElementById('adminUsername').value.trim();
+        const password = document.getElementById('adminPassword').value;
+
+        if (!password) {
+          showError('Введите пароль');
+          return;
+        }
+
+        setLoading(true);
+        try {
+          const response = await fetch(`${API_BASE_URL}/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password }),
+          });
+          const data = await response.json();
+          if (data.success) {
+            localStorage.setItem('poll_user', JSON.stringify(data.user));
+            location.href = 'admin.html';
+          } else {
+            showError(data.error || 'Неверный логин или пароль');
+          }
+        } catch (error) {
+          showError('Ошибка подключения к серверу');
+        } finally {
+          setLoading(false);
+        }
+      });
+
+      document.querySelectorAll('.input-group input').forEach(inp => {
+        inp.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') document.getElementById('adminLoginSubmit').click();
+        });
+      });
+    </script>
+  </body>
+</html>

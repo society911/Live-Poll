@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Панель администратора — LivePoll</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <header class="header">
+      <div class="container">
+        <h1 onclick="location.href='index.html'" style="cursor:pointer"><i class="fas fa-poll"></i> LivePoll</h1>
+        <nav class="nav">
+          <span id="userInfo" class="user-info hidden"></span>
+          <button class="nav-btn" onclick="location.href='index.html'">
+            <i class="fas fa-home"></i> На главную
+          </button>
+          <button id="logoutBtn" class="nav-btn hidden" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Выйти
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="container" style="flex-direction: column;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h2><i class="fas fa-tachometer-alt"></i> Панель управления</h2>
+          <button id="createPollBtn" class="admin-btn">
+            <i class="fas fa-plus-circle"></i> Создать опрос
+          </button>
+        </div>
+
+        <div class="admin-panel" style="background: rgba(26,26,46,0.9); border-radius: 20px; padding: 25px; border: 2px solid rgba(255,255,255,0.1);">
+          <h3 style="margin-bottom: 20px;">Все опросы</h3>
+          <div id="adminPollsList"></div>
+        </div>
+
+        <div class="admin-panel" style="background: rgba(26,26,46,0.9); border-radius: 20px; padding: 25px; border: 2px solid rgba(255,255,255,0.1); margin-top: 20px;">
+          <h3 style="margin-bottom: 20px;">Активные опросы (трансляция)</h3>
+          <div id="activePollsList"></div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p><i class="fas fa-copyright"></i> 2026 Мареич Владислав ИС-41.</p>
+      </div>
+    </footer>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="script.js"></script>
+    <script src="admin.js"></script>
+    <audio id="voteAudio" preload="auto" style="display: none">
+      <source src="assets/vote-sound.mp3" type="audio/mpeg" />
+    </audio>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        checkSavedSession();
+
+        if (!currentUser || currentUser.role !== 'admin') {
+          alert('Доступ запрещён. Только для администраторов.');
+          location.href = 'admin-login.html';
+          return;
+        }
+
+        showUserInterface();
+        loadActivePolls();
+        loadAdminPollsList();
+        initWebSocket();
+        initAudio();
+
+        document.getElementById('createPollBtn').addEventListener('click', function() {
+          startPollCreation(currentUser);
+        });
+      });
+    </script>
+  </body>
+</html>

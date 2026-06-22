@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Профиль зрителя — LivePoll</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <header class="header">
+      <div class="container">
+        <h1 onclick="location.href='index.html'" style="cursor:pointer"><i class="fas fa-poll"></i> LivePoll</h1>
+        <nav class="nav">
+          <span id="userInfo" class="user-info hidden"></span>
+          <button class="nav-btn" onclick="location.href='index.html'">
+            <i class="fas fa-home"></i> На главную
+          </button>
+          <button id="logoutBtn" class="nav-btn hidden" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Выйти
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="container">
+        <div style="flex: 1;">
+          <div class="stream-container" style="padding: 30px;">
+            <h2><i class="fas fa-user"></i> Профиль пользователя</h2>
+            <div id="profileInfo" style="margin-top: 20px; font-size: 1.1rem; line-height: 2;"></div>
+          </div>
+        </div>
+
+        <div id="pollSidebar" class="poll-sidebar">
+          <div id="sidebarContent">
+            <div class="welcome-message">
+              <h3><i class="fas fa-poll"></i> Активные опросы</h3>
+              <div id="activePollsList"></div>
+            </div>
+          </div>
+          <button id="toggleChartBtn" class="nav-btn hidden"
+            style="width: 100%; margin-top: 15px; background: #6c757d">
+            <i class="fas fa-chart-bar"></i> Показать результаты
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p><i class="fas fa-copyright"></i> 2026 Мареич Владислав ИС-41.</p>
+      </div>
+    </footer>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="script.js"></script>
+    <audio id="voteAudio" preload="auto" style="display: none">
+      <source src="assets/vote-sound.mp3" type="audio/mpeg" />
+    </audio>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        checkSavedSession();
+
+        if (!currentUser) {
+          alert('Необходимо войти в систему');
+          location.href = 'login.html';
+          return;
+        }
+
+        if (currentUser) {
+          document.getElementById('userInfo').textContent =
+            `${currentUser.role === 'admin' ? 'Админ' : 'Зритель'}: ${currentUser.username}`;
+          document.getElementById('userInfo').classList.remove('hidden');
+          document.getElementById('logoutBtn')?.classList.remove('hidden');
+
+          document.getElementById('profileInfo').innerHTML = `
+            <p><i class="fas fa-user"></i> <strong>Логин:</strong> ${currentUser.username}</p>
+            <p><i class="fas fa-tag"></i> <strong>Роль:</strong> ${currentUser.role === 'admin' ? 'Администратор' : 'Зритель'}</p>
+          `;
+        }
+
+        loadActivePolls();
+        initWebSocket();
+        initAudio();
+      });
+    </script>
+  </body>
+</html>

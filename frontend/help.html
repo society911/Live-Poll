@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Справка — LivePoll System</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: #f4f7f6;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 800px;
+        margin: 40px auto;
+        background: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+      }
+      h2 {
+        color: #2980b9;
+        margin-top: 25px;
+      }
+      .icon-box {
+        display: inline-block;
+        width: 30px;
+        color: #3498db;
+      }
+      .feature-list {
+        list-style: none;
+        padding: 0;
+      }
+      .feature-list li {
+        margin-bottom: 15px;
+        padding-left: 10px;
+        border-left: 3px solid #3498db;
+      }
+      .role-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 0.9em;
+        font-weight: bold;
+        color: #fff;
+      }
+      .admin-bg {
+        background: #e74c3c;
+      }
+      .user-bg {
+        background: #2ecc71;
+      }
+      .footer {
+        text-align: center;
+        margin-top: 30px;
+        color: #888;
+        font-size: 0.9em;
+      }
+      .back-link {
+        display: inline-block;
+        margin-top: 20px;
+        text-decoration: none;
+        color: #3498db;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1><i class="fas fa-info-circle"></i> Справочный центр LivePoll</h1>
+      <p>
+        Добро пожаловать в систему интерактивных опросов. Данное приложение
+        предназначено для взаимодействия зрителей с ведущим в режиме реального
+        времени.
+      </p>
+
+      <h2><span class="role-badge user-bg">Для зрителей</span></h2>
+      <ul class="feature-list">
+        <li>
+          <span class="icon-box"><i class="fas fa-sign-in-alt"></i></span>
+          <strong>Авторизация:</strong> Чтобы голосовать, пройдите быструю
+          регистрацию или войдите под своим аккаунтом.
+        </li>
+        <li>
+          <span class="icon-box"><i class="fas fa-mouse-pointer"></i></span>
+          <strong>Голосование:</strong> Когда ведущий запустит опрос, он
+          появится в правой панели. Выберите один из вариантов.
+        </li>
+        <li>
+          <span class="icon-box"><i class="fas fa-chart-pie"></i></span>
+          <strong>Результаты:</strong> После вашего голоса (или обновления
+          данных сокетом) график отобразит текущую статистику всех участников.
+        </li>
+      </ul>
+
+      <h2><span class="role-badge admin-bg">Для администраторов</span></h2>
+      <ul class="feature-list">
+        <li>
+          <span class="icon-box"><i class="fas fa-plus-square"></i></span>
+          <strong>Создание опроса:</strong> Используйте кнопку «Создать опрос» в
+          нижней панели управления. Введите вопрос и варианты ответов (минимум
+          2).
+        </li>
+        <li>
+          <span class="icon-box"><i class="fas fa-trash-alt"></i></span>
+          <strong>Управление:</strong> Список активных опросов отображается в
+          панели админа. Вы можете удалить любой опрос, нажав красную кнопку
+          «Удалить».
+        </li>
+        <li>
+          <span class="icon-box"><i class="fas fa-sync"></i></span>
+          <strong>Real-time контроль:</strong> Все действия мгновенно
+          отображаются у всех подключенных пользователей.
+        </li>
+      </ul>
+
+      <h2>Технические требования</h2>
+      <p>
+        Для корректной работы системы необходим современный браузер (Chrome,
+        Firefox, Edge) и стабильное интернет-соединение для работы WebSockets.
+      </p>
+
+      <a href="#" onclick="window.close(); return false;" class="back-link"
+        >← Закрыть справку</a
+      >
+
+      <div class="footer">
+        &copy; 2026 LivePoll System. Разработка: Мареич В. ИС-41
+      </div>
+    </div>
+  </body>
+</html>
