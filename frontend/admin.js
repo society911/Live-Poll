@@ -1,5 +1,5 @@
 if (typeof API_BASE_URL === 'undefined') {
-    window.API_BASE_URL = 'http://localhost:3000/api';
+    window.API_BASE_URL = 'https://live-poll-272f.onrender.com/api';
 }
 
 window.togglePollStatus = async function(pollId) {
