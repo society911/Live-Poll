@@ -55,8 +55,9 @@ function playVoteSound() {
 
 function initWebSocket() {
     try {
-        socket = io('https://live-poll-272f.onrender.com/');
-
+        socket = io('https://live-poll-272f.onrender.com/', {
+    transports: ['polling']
+});
         socket.on('connect', () => {
             console.log('WebSocket подключен');
             updateConnectionStatus(true);
